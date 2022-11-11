@@ -1,0 +1,28 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:5000
+
+processors:
+  batch:
+
+exporters:
+  kafka:
+    protocol_version: 1.0.0
+    brokers: emig-ehns.servicebus.windows.net:9093
+    topic: emig-eh1
+    auth:
+      tls:
+        insecure: false
+      sasl:
+        username: $$ConnectionString
+        password: $CONNECTION_STRING
+        mechanism: PLAIN
+
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [kafka]

@@ -1,0 +1,55 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:5000
+
+processors:
+  batch:
+  filter/1:
+    metrics:
+      include:
+        match_type: expr
+        expressions:
+        - Label("site") == "london"
+  filter/2:
+    metrics:
+      include:
+        match_type: expr
+        expressions:
+        - Label("site") == "kolkata"
+
+exporters:
+  kafka/1:
+    protocol_version: 1.0.0
+    brokers: emig-ehns.servicebus.windows.net:9093
+    topic: emig-eh1
+    auth:
+      tls:
+        insecure: false
+      sasl:
+        username: $$ConnectionString
+        password: $CONNECTION_STRING_EH1
+        mechanism: PLAIN
+  kafka/2:
+    protocol_version: 1.0.0
+    brokers: emig-ehns.servicebus.windows.net:9093
+    topic: emig-eh2
+    auth:
+      tls:
+        insecure: false
+      sasl:
+        username: $$ConnectionString
+        password: $CONNECTION_STRING_EH2
+        mechanism: PLAIN
+
+service:
+  pipelines:
+    metrics/1:
+      receivers: [otlp]
+      processors: [batch, filter/1]
+      exporters: [kafka/1]
+    metrics/2:
+      receivers: [otlp]
+      processors: [batch, filter/2]
+      exporters: [kafka/2]
