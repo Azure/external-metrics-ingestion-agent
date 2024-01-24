@@ -1,3 +1,4 @@
+/* Adding test change for policy evidence */
 External Metrics Ingestion Agent (EMA) is open-source software that you build yourself, to receive metrics data from your software, and export it to Azure’s External Metrics Ingestion Gateway (EMIG). EMA is based on the OpenTelemetry Collector, and the OpenTelemetry Collector is an open-source GitHub project, that has several optional packages to be used as receivers, processors, exporters and extensions. In this document we will talk about the several types of configurations that are required for different topologies between your workloads and the EMIG endpoint(s).
 
 
